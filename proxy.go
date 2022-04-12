@@ -11,15 +11,20 @@ import (
 
 // TODO: complete
 type Proxy struct {
-	Id         string
-	Host       string
-	Port       int
-	Expires_at time.Time
+	Id             string    `json:"id"`
+	Host           string    `json:"host"`
+	Port           int       `json:"port"`
+	ExpirationTime time.Time `json:"expirest_at"`
+	apiKey         string
 }
 type proxyApiResponse struct {
 	Success bool   `json:"success"`
 	Proxy   Proxy  `json:"proxy"`
 	Message string `json:"message"`
+}
+
+func (p *Proxy) String() string {
+	return "Proxy: " + p.Id + " Host: " + p.Host + " Port: " + strconv.Itoa(p.Port)
 }
 
 func GetProxy(apiKey string) (*Proxy, error) {
@@ -51,5 +56,10 @@ func GetProxy(apiKey string) (*Proxy, error) {
 		return nil, errors.New("api failure: " + p.Message)
 	}
 
+	p.Proxy.apiKey = apiKey
 	return &p.Proxy, nil
+}
+
+func (p *Proxy) ExtendExpirationTime() error {
+	return nil
 }
