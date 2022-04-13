@@ -10,21 +10,45 @@ import (
 	"time"
 )
 
-// # TODO: complete
 type ProxyVisibility struct {
 	Ip         string `json:"ip"`
 	Country    string `json:"country"`
 	CountryISO string `json:"country_iso"`
+	IsCountryInEurope bool `json:"country_eu"`
+	Latitude float32 `json:"latitude"`
+	Longitude float32 `json:"longitude"`
+	Timezone string `json:"timezone"`
+	ASN string `json:"asn"`
+	ASNOrganization string `json:"asn_org"`
+	ZipCode string `json:"zip_code"`
+	RegionName string `json:"region_name"`
+	RegionCode string `json:"region_code"`
+	City string `json:"city"`
+}
+
+type ProxyFeaturesSupportedProtocols struct {
+	Socks4 bool `json:"sock4"`
+	Socks5 bool `json:"sock5"`
+	Http bool `json:"http"`
+	Https bool `json:"https"`
+}
+
+type ProxyFeatures struct {
+	IsStatic bool `json:"static"`
+	SupportedProtocols  ProxyFeaturesSupportedProtocols `json:"supported_protocols"`
 }
 
 type Proxy struct {
 	Id             string          `json:"id"`
 	Host           string          `json:"host"`
 	Port           int             `json:"port"`
-	ExpirationTime time.Time       `json:"expirest_at"` // TODO: fix time parsing
+	ExpirationTime time.Time       `json:"expires_at"`
+	WhitelistedIps []string `json:"whitelisted_ips"`
 	Visibility     ProxyVisibility `json:"visibility"`
+	Features ProxyFeatures `json:"features"`
 	apiKey         string
 }
+
 type proxyApiResponse struct {
 	Success bool   `json:"success"`
 	Proxy   Proxy  `json:"proxy"`
