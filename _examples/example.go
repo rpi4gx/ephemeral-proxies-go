@@ -22,9 +22,19 @@ func main() {
 		os.Exit(-1)
 	}
 
-	p, err := ephemeralproxies.NewProxy(*apiKey)
+	serviceStatus, err := ephemeralproxies.GetServiceStatus(*apiKey)
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(p)
+	fmt.Println("Ephemeral Proxies Service Status:")
+	fmt.Println(serviceStatus)
+	fmt.Println()
+
+	proxy, err := ephemeralproxies.NewProxy(*apiKey)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("Details of new proxy obtained:")
+	fmt.Println(proxy)
+	fmt.Println()
 }
