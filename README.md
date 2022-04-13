@@ -1,7 +1,10 @@
-## Go package to make use of [Ephemeral proxies API](https://www.ephemeral-proxies.net/)
+## Golang helper library of [Ephemeral proxies API](https://www.ephemeral-proxies.net/)
 
+:warning: This library requires a valid Rapid API key to access Ephemeral Proxies API. A Rapid API key can easily be obtained on https://rapidapi.com/.
 
-Example
+:information_source: More information about Ephemeral Proxies API can be found [here](https://rapidapi.com/rpi4gx/api/ephemeral-proxies)
+
+### Quick start
 
 ```
 go mod init sample
