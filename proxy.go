@@ -1,3 +1,4 @@
+// Package ephemeralproxies is a helper library for https://rapidapi.com/rpi4gx/api/ephemeral-proxies
 package ephemeralproxies
 
 import (
@@ -84,6 +85,7 @@ func processProxyApiResponse(req *http.Request) (*proxyApiResponse, error) {
 	return &p, nil
 }
 
+// NewProxy returns a new allocated proxy for the next 30 mins
 func NewProxy(apiKey string) (*Proxy, error) {
 	return NewProxyWithOptions(apiKey, []string{}, "")
 }
