@@ -8,24 +8,26 @@ import (
 	"strconv"
 )
 
-type SsAvailabilityTotal struct {
+type AvailabilityTotal struct {
 	NumberOfProxies int `json:"proxies"`
 }
 
-type SsCountry struct {
+type Country struct {
 	CountryISO      string `json:"country_iso"`
 	NumberOfProxies int    `json:"proxies"`
 }
 
-type SsAvailability struct {
-	Total     SsAvailabilityTotal `json:"total"`
-	Countries []SsCountry         `json:"by_country"`
-}
-type ServiceStatus struct {
-	Availability SsAvailability `json:"availability"`
+type Availability struct {
+	Total     AvailabilityTotal `json:"total"`
+	Countries []Country         `json:"by_country"`
 }
 
-type SsApiResponse struct {
+// ServiceStatus holds the /service_status response
+type ServiceStatus struct {
+	Availability Availability `json:"availability"`
+}
+
+type serviceStatusApiResponse struct {
 	Success       bool          `json:"success"`
 	ServiceStatus ServiceStatus `json:"service_status"`
 	Message       string        `json:"message"`
@@ -36,6 +38,7 @@ func (ss *ServiceStatus) String() string {
 	return string(r)
 }
 
+// GetServiceStatus returns service status of Ephemeral Proxies API
 func GetServiceStatus(apiKey string) (*ServiceStatus, error) {
 	url := "https://ephemeral-proxies.p.rapidapi.com/v1/service_status"
 	req, _ := http.NewRequest("GET", url, nil)
@@ -57,7 +60,7 @@ func GetServiceStatus(apiKey string) (*ServiceStatus, error) {
 		return nil, err
 	}
 
-	var ss SsApiResponse
+	var ss serviceStatusApiResponse
 	if err := json.Unmarshal(body, &ss); err != nil {
 		return nil, err
 	}

@@ -1,4 +1,4 @@
-// Package ephemeralproxies is a helper library for https://rapidapi.com/rpi4gx/api/ephemeral-proxies
+// Package ephemeralproxies is a client library for https://rapidapi.com/rpi4gx/api/ephemeral-proxies API
 package ephemeralproxies
 
 import (
@@ -28,8 +28,8 @@ type ProxyVisibility struct {
 }
 
 type ProxyFeaturesSupportedProtocols struct {
-	Socks4 bool `json:"sock4"`
-	Socks5 bool `json:"sock5"`
+	Socks4 bool `json:"socks4"`
+	Socks5 bool `json:"socks5"`
 	Http   bool `json:"http"`
 	Https  bool `json:"https"`
 }
@@ -61,6 +61,8 @@ func (p *Proxy) String() string {
 	return string(r)
 }
 
+// shared function to process response from
+// /v1/proxy and /v1/extend_proxy endpoints
 func processProxyApiResponse(req *http.Request) (*proxyApiResponse, error) {
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {
@@ -90,6 +92,11 @@ func NewProxy(apiKey string) (*Proxy, error) {
 	return NewProxyWithOptions(apiKey, []string{}, "")
 }
 
+// NewProxyWithOptions returns a new allocated proxy for the next 30 mins
+//
+// - countriesISO: allows to select a preferred list of countries the proxy will be located. Example: GB,IT,ES
+//
+// - extraWhitelistIp: extra IP to be allowed to connect to the proxy. Example: "90.80.70.60"
 func NewProxyWithOptions(apiKey string, countriesISO []string, extraWhitelistIp string) (*Proxy, error) {
 	url := "https://ephemeral-proxies.p.rapidapi.com/v1/proxy"
 	req, _ := http.NewRequest("GET", url, nil)
@@ -118,6 +125,9 @@ func NewProxyWithOptions(apiKey string, countriesISO []string, extraWhitelistIp 
 	return &p.Proxy, nil
 }
 
+// ExtendExpirationTime extends the expiration time of the proxy by 30 mins.
+//
+// A proxy can only be allocated by 24 hours max.
 func (proxy *Proxy) ExtendExpirationTime() error {
 	apiKey := proxy.apiKey
 	url := "https://ephemeral-proxies.p.rapidapi.com/v1/extend_proxy"
