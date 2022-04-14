@@ -1,3 +1,4 @@
+[![Go Reference](https://pkg.go.dev/badge/github.com/rpi4gx/ephemeral-proxies-go.svg)](https://pkg.go.dev/github.com/rpi4gx/ephemeral-proxies-go)
 ## Golang client library for [Ephemeral proxies API](https://www.ephemeral-proxies.net/)
 
 :warning: This library requires a valid Rapid API key to access Ephemeral Proxies API. A Rapid API key can easily be obtained on https://rapidapi.com/.
