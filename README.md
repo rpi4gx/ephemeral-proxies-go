@@ -35,6 +35,7 @@ Clone the repo
 
 ```
 $ git clone https://github.com/rpi4gx/ephemeral-proxies-go.git
+$ cd ephemeral-proxies-go
 ```
 Example 1: Pull a new proxy from the API
 ```
