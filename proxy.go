@@ -36,6 +36,7 @@ type ProxyFeaturesSupportedProtocols struct {
 
 type ProxyFeatures struct {
 	IsStatic           bool                            `json:"static"`
+	Type               string                          `json:"type"`
 	SupportedProtocols ProxyFeaturesSupportedProtocols `json:"supported_protocols"`
 }
 
@@ -48,6 +49,7 @@ type Proxy struct {
 	Visibility     ProxyVisibility `json:"visibility"`
 	Features       ProxyFeatures   `json:"features"`
 	apiKey         string
+	proxyType		ProxyType
 }
 
 type proxyApiResponse struct {
@@ -88,17 +90,18 @@ func processProxyApiResponse(req *http.Request) (*proxyApiResponse, error) {
 }
 
 // NewProxy returns a new allocated proxy for the next 30 mins
-func NewProxy(apiKey string) (*Proxy, error) {
-	return NewProxyWithOptions(apiKey, []string{}, "")
+func NewProxy(apiKey string, proxyType ProxyType) (*Proxy, error) {
+	return NewProxyWithOptions(apiKey, proxyType, []string{}, "")
 }
 
 // NewProxyWithOptions returns a new allocated proxy for the next 30 mins
+// - proxyType: Type of proxy to retrieve. e.g.: `datacenter`, `residential`
 //
 // - countriesISO: allows to select a preferred list of countries the proxy will be located. Example: GB,IT,ES
 //
 // - extraWhitelistIp: extra IP to be allowed to connect to the proxy. Example: "90.80.70.60"
-func NewProxyWithOptions(apiKey string, countriesISO []string, extraWhitelistIp string) (*Proxy, error) {
-	url := "https://ephemeral-proxies.p.rapidapi.com/v1/proxy"
+func NewProxyWithOptions(apiKey string, proxyType ProxyType, countriesISO []string, extraWhitelistIp string) (*Proxy, error) {
+	url := "https://ephemeral-proxies.p.rapidapi.com/v2/" + proxyType.String() + "/proxy"
 	req, _ := http.NewRequest("GET", url, nil)
 
 	req.Header.Add("X-RapidAPI-Host", "ephemeral-proxies.p.rapidapi.com")
@@ -122,6 +125,7 @@ func NewProxyWithOptions(apiKey string, countriesISO []string, extraWhitelistIp 
 	}
 
 	p.Proxy.apiKey = apiKey
+	p.Proxy.proxyType = proxyType
 	return &p.Proxy, nil
 }
 
@@ -129,8 +133,11 @@ func NewProxyWithOptions(apiKey string, countriesISO []string, extraWhitelistIp 
 //
 // A proxy can only be allocated by 24 hours max.
 func (proxy *Proxy) ExtendExpirationTime() error {
+	if proxy.proxyType != Datacenter {
+		return errors.New("proxy does not support extending expiration time")
+	}
 	apiKey := proxy.apiKey
-	url := "https://ephemeral-proxies.p.rapidapi.com/v1/extend_proxy"
+	url := "https://ephemeral-proxies.p.rapidapi.com/v2/datacenter/extend_proxy"
 	req, _ := http.NewRequest("GET", url, nil)
 
 	req.Header.Add("X-RapidAPI-Host", "ephemeral-proxies.p.rapidapi.com")

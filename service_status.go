@@ -39,8 +39,8 @@ func (ss *ServiceStatus) String() string {
 }
 
 // GetServiceStatus returns service status of Ephemeral Proxies API
-func GetServiceStatus(apiKey string) (*ServiceStatus, error) {
-	url := "https://ephemeral-proxies.p.rapidapi.com/v1/service_status"
+func GetServiceStatus(apiKey string, proxyType ProxyType) (*ServiceStatus, error) {
+	url := "https://ephemeral-proxies.p.rapidapi.com/v2/" + proxyType.String() + "/service_status"
 	req, _ := http.NewRequest("GET", url, nil)
 
 	req.Header.Add("X-RapidAPI-Host", "ephemeral-proxies.p.rapidapi.com")
