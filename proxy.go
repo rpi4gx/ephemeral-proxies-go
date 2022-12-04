@@ -106,6 +106,7 @@ func NewProxyWithOptions(apiKey string, proxyType ProxyType, countriesISO []stri
 
 	req.Header.Add("X-RapidAPI-Host", "ephemeral-proxies.p.rapidapi.com")
 	req.Header.Add("X-RapidAPI-Key", apiKey)
+	req.Header.Set("User-Agent", "Ephemeral Proxies/0.1 Go")
 
 	if len(countriesISO) > 0 {
 		query := req.URL.Query()
@@ -142,6 +143,7 @@ func (proxy *Proxy) ExtendExpirationTime() error {
 
 	req.Header.Add("X-RapidAPI-Host", "ephemeral-proxies.p.rapidapi.com")
 	req.Header.Add("X-RapidAPI-Key", apiKey)
+	req.Header.Set("User-Agent", "Ephemeral Proxies/0.1 Go")
 
 	query := req.URL.Query()
 	query.Add("id", proxy.Id)
